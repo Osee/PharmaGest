@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const PanelHeader = ({ children, userLogged }) => {
+const Panel = ({ children, userLogged }) => {
     const [linkText, setLinkText] = useState("");
     const [productOpen, toggleProductOpen] = useToggle();
     const [categoryOpen, toggleCategoryOpen] = useToggle();
@@ -449,4 +449,4 @@ const PanelHeader = ({ children, userLogged }) => {
     );
 }
 
-export default PanelHeader
+export default Panel
