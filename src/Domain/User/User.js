@@ -6,6 +6,8 @@ import { GlobalContext } from '../../Context/Provider';
 import GetToken from './Actions/GetToken';
 import UserCreateLayout from './Layout/UserCreateLayout';
 import useUserForm from './Hooks/useUserForm';
+import { SnackWithAction } from "../../Components/feedback"
+import ClearAddedData from './Actions/ClearAddedData';
 
 
 const UserCreateTheme = makeStyles((theme) => ({
@@ -41,6 +43,16 @@ export function UserCreate() {
         GetToken(token)(dispatchUser)
     }, [dispatchUser, token])
 
+    useEffect(() => {
+        if (data) {
+            toggleSnack()
+        }
+        return () => {
+            toggleSnack()
+            ClearAddedData()(dispatchUser)
+        }
+    }, [data, dispatchUser, toggleSnack])
+
 
     return <>
         <Typography variant="h3" color="inherit" >
@@ -55,5 +67,6 @@ export function UserCreate() {
             </Grid>
             <Grid item md={2} />
         </Grid>
+        {snack && <SnackWithAction message="Enregistrement reussi!" to="/users" />}
     </>
 }
