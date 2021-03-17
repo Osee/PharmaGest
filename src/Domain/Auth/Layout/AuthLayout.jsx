@@ -50,7 +50,7 @@ const loginStyles = makeStyles((theme) => ({
 }));
 
 export default function AuthLayout({
-  form: { form, handleChange, handleSubmit, loading, error, authFormValidate },
+  form: { register, onSubmit, handleSubmit, isSubmitting, errors },
 }) {
   const classes = loginStyles();
   return (
@@ -67,32 +67,36 @@ export default function AuthLayout({
           <form
             autoComplete="false"
             className={classes.form}
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  inputRef={register({
+                    required: "Username can not be empty",
+                  })}
                   id="username"
                   label="Username"
                   fullWidth
                   variant="outlined"
                   name="username"
-                  value={form.username || ""}
-                  onChange={handleChange}
-                  error={error ? true : false}
+                  error={errors.username ? true : false}
+                  helperText={errors.username?.message}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  inputRef={register({
+                    required: "Password can not be empty",
+                  })}
                   id="password"
                   label="Password"
                   type="password"
                   fullWidth
                   variant="outlined"
                   name="password"
-                  value={form.password || ""}
-                  onChange={handleChange}
-                  error={error ? true : false}
+                  error={errors.password ? true : false}
+                  helperText={errors.password?.message}
                 />
               </Grid>
               <Button
@@ -100,16 +104,18 @@ export default function AuthLayout({
                 color="primary"
                 type="submit"
                 className={classes.submit}
-                disabled={authFormValidate || loading}
+                disabled={isSubmitting}
                 fullWidth
-                startIcon={loading && <SpinnerButton />}
+                startIcon={isSubmitting && <SpinnerButton />}
               >
-                {loading ? "LOADING..." : "Connexion"}
+                {isSubmitting ? "LOADING..." : "Connexion"}
               </Button>
             </Grid>
           </form>
         </Paper>
-        {error && <AlertComponent type="error" phrase={error.errors.message} />}
+        {errors?.loginFailed && (
+          <AlertComponent type="error" phrase={errors.loginFailed.message} />
+        )}
       </Grid>
       <Grid item xs={1} md={4} />
     </Grid>

@@ -1,35 +1,49 @@
-import { useState, useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { GlobalContext } from '../../../Context/Provider'
+import { useForm } from "react-hook-form"
 import Login from '../Actions/Login'
 
 function useAuthForm(init = {}) {
-    const [form, setform] = useState(init)
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            isSubmitting,
+        },
+        setError,
+        errors,
+        clearErrors
+    } = useForm({
+        mode: "onTouched",
+        defaultValues: init
+    })
     const {
         authState: {
-            loading,
             error
         },
         dispatchAuth
     } = useContext(GlobalContext)
-    const authFieldsValidate = !form.username?.length || !form.password?.length
 
-    const handleChange = e => {
-        const { name, value } = e.target
-        setform({ ...form, [name]: value })
+    const onSubmit = data => {
+        Login(data)(dispatchAuth)
     }
-    const handleSubmit = e => {
-        e.preventDefault();
-        Login(form)(dispatchAuth)
 
-    }
+    useEffect(() => {
+        if (error) {
+            setError("loginFailed", {
+                type: "manual",
+                message: error.errors.message
+            })
+            return () => clearErrors()
+        }
+    }, [clearErrors, error, setError])
 
     return {
-        form,
-        handleChange,
+        register,
         handleSubmit,
-        authFieldsValidate,
-        loading,
-        error
+        onSubmit,
+        isSubmitting,
+        errors
     }
 }
 

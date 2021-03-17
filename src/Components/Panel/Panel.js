@@ -94,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Panel = ({ children, userLogged }) => {
+    console.log(userLogged);
     const [linkText, setLinkText] = useState("");
     const [productOpen, toggleProductOpen] = useToggle();
     const [categoryOpen, toggleCategoryOpen] = useToggle();
@@ -184,8 +185,8 @@ const Panel = ({ children, userLogged }) => {
                                 <ListItemText primary="Sell" />
                             </ListItem>
                         </NavLink>
-                    </List>
-                    {userLogged === 1 && <> <List
+                    </List>;
+                    {userLogged.level === 1 && <> <List
                         id="report"
                         key="report"
                         component="nav"

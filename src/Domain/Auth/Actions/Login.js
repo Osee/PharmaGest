@@ -1,11 +1,11 @@
 import axiosInstance from "../../../Utils/axiosAPI"
 import { LOGIN_ERROR, LOGIN_FECTH, LOGIN_SET } from "../Constants/AuthConstants"
 
-const Login = ({ username, password }) => dispatch => {
+const Login = ({ username, password }) => async dispatch => {
     dispatch({
         type: LOGIN_FECTH
     })
-    axiosInstance.post("/login", {
+    await axiosInstance.post("/login", {
         username,
         password
     })

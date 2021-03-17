@@ -18,6 +18,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 export const AlertComponent = ({ type, phrase }) => {
+
   const useStyle = makeStyles((theme) => ({
     alert: {
       margin: theme.spacing(2, "auto"),
@@ -25,11 +26,11 @@ export const AlertComponent = ({ type, phrase }) => {
     },
   }));
   const classes = useStyle();
+
   return (
     <>
       <Alert severity={type} className={classes.alert}>
-        {" "}
-        {JSON.stringify(phrase)}
+        {phrase}
       </Alert>
     </>
   );
