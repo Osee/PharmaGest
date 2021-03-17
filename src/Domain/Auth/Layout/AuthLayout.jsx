@@ -72,9 +72,7 @@ export default function AuthLayout({
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  inputRef={register({
-                    required: "Username can not be empty",
-                  })}
+                  inputRef={register}
                   id="username"
                   label="Username"
                   fullWidth
@@ -86,9 +84,7 @@ export default function AuthLayout({
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  inputRef={register({
-                    required: "Password can not be empty",
-                  })}
+                  inputRef={register}
                   id="password"
                   label="Password"
                   type="password"
