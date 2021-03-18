@@ -41,7 +41,7 @@ function useAuthForm(init = {}) {
         if (error) {
             setError("loginFailed", {
                 type: "manual",
-                message: error.errors.message
+                message: error.errors?.message
             })
             return () => clearErrors()
         }
