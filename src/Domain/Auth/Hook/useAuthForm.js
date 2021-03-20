@@ -33,8 +33,8 @@ function useAuthForm(init = {}) {
         dispatchAuth
     } = useContext(GlobalContext)
 
-    const onSubmit = data => {
-        Login(data)(dispatchAuth)
+    const onSubmit = async data => {
+        await Login(data)(dispatchAuth)
     }
 
     useEffect(() => {
