@@ -1,9 +1,66 @@
-import { useState, useContext, useEffect } from "react"
-import { ERRORS_RESET, ERRORS_SET, ERRORS_SET_DONT_MATCH, ERRORS_SET_MAX_LENGTH, ERRORS_SET_MIN_LENGTH, ERRORS_SET_SHOULD_BE_HAVE_AN_NUMBER, ERRORS_SET_SHOULD_BE_HAVE_AN_UPPERCASE } from "../../../Constants";
+import { useContext } from "react"
 import { GlobalContext } from "../../../Context/Provider";
 import AddUser from "../Actions/AddUser";
+import { useForm, Controller } from "react-hook-form"
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+    username: yup.string()
+        .min(3, "must be at least 3 characters")
+        .max(25, "must be at least 25 characters or less")
+        .required("is required"),
+    level: yup.number()
+        .integer()
+        .required("is required"),
+    password: yup.string()
+        .matches(/[A-Z0-9]+/)
+        .min(6, "must be at least 6 characters")
+        .max(25,  "must be at least 25 characters or less")
+        .required("is required"),
+    repassword: yup.string()
+        .oneOf([yup.ref('password'), null], "Password must match")
+        .required("is required")
+})
 
 function useUserForm(init = {}) {
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            isSubmitting
+        },
+        errors,
+        setError,
+        clearErrors,
+        control,
+        reset
+    } = useForm({
+        mode: "onTouched",
+        defaultValues: init,
+        resolver : yupResolver(schema)
+    })
+
+    const {
+        userState: {
+            users: {
+                token
+            },
+            addUser: {
+                error
+            }
+        },
+        dispatchUser
+    } = useContext(GlobalContext)
+    const onSubmit = async data => {
+        await AddUser(data, token)(dispatchUser)
+        reset()
+    }
+
+    
+
+/* 
     const [form, setform] = useState(init)
     const handleChange = e => {
         const { value, name } = e.target
@@ -109,6 +166,17 @@ function useUserForm(init = {}) {
         errorState,
         loading,
         usersFieldsValidate
+
+    } */
+
+    return {
+        register,
+        handleSubmit,
+        onSubmit,
+        isSubmitting,
+        errors,
+        control,
+        Controller
 
     }
 }

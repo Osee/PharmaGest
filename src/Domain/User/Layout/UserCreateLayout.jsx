@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import { Grid, TextField, MenuItem, makeStyles } from "@material-ui/core";
 import { Save } from "@material-ui/icons";
@@ -6,11 +6,11 @@ import { SpinnerButton } from "../../../Components/feedback";
 
 const Options = [
   {
-    value: "1",
+    value: 1,
     text: "Adminstrateur",
   },
   {
-    value: "0",
+    value: 0,
     text: "User",
   },
 ];
@@ -33,28 +33,23 @@ const UserCreateTheme = makeStyles((theme) => ({
 
 function UserCreateLayout({
   form: {
-    form,
-    handleChange,
+    register,
     handleSubmit,
-    loading,
-    usersFieldsValidate,
-    errorState: { payload },
+    onSubmit,
+    isSubmitting,
+    errors,
+    control,
+    Controller
   },
 }) {
   const classes = UserCreateTheme();
-  const [level, setlevel] = useState("");
-
-  const handleSelectChange = (e) => {
-    handleChange(e);
-    setlevel(e.target.value);
-  };
-
+ 
   return (
     <>
       <form
         autoComplete="false"
         className={classes.root}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Grid container spacing={2}>
           <Grid item md>
@@ -64,32 +59,47 @@ function UserCreateLayout({
               variant="outlined"
               label="Username"
               fullWidth
-              value={form.username || ""}
+              inputRef={register}
+              error={errors?.username && true}
+              helperText={errors?.username?.message}
+              /* value={form.username || ""}
               onChange={handleChange}
               error={payload?.username && true}
               helperText={
                 payload?.username &&
                 payload.username.replace("Le champs username ", "")
-              }
+              } */
             />
           </Grid>
           <Grid item md>
+            <Controller
+              control={control}
+              name="level"  
+            render={(
+              { onChange, onBlur, value, name, ref }
+            ) => (
             <TextField
               id="level"
               select
-              name="level"
+              onBlur={onBlur}
+              name={name}
               variant="outlined"
               label="Level"
-              value={level}
-              onChange={handleSelectChange}
+              value={value} 
+              onChange={onChange}
               fullWidth
+              inputRef={ref}
+              error={errors?.level && true}
+              helperText={errors?.level?.message}
             >
-              {Options.map((op, id) => (
+              {Options.map(op => (
                 <MenuItem key={op.value} value={op.value}>
                   {op.text}
                 </MenuItem>
               ))}
             </TextField>
+            )}
+            />
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -101,13 +111,17 @@ function UserCreateLayout({
               label="Password"
               type="password"
               fullWidth
+              inputRef={register}
+              error={errors?.password && true}
+              helperText={errors?.password?.message}
+              /*
               value={form.password || ""}
               onChange={handleChange}
               error={payload?.password && true}
               helperText={
                 payload?.password &&
                 payload.password.replace("Le champs password ", "")
-              }
+              } */
             />
           </Grid>
           <Grid item md>
@@ -118,26 +132,35 @@ function UserCreateLayout({
               label="Confirm"
               type="password"
               fullWidth
+              inputRef={register}
+              
+              error={errors?.repassword && true}
+              helperText={errors?.repassword?.message}
+              /*
               value={form.repassword || ""}
               onChange={handleChange}
               error={payload?.repassword && true}
               helperText={
                 payload?.repassword &&
                 payload.repassword.replace("Le champs password ", "")
-              }
+              } */
             />
           </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item md>
           <div className={classes.containerBottom}>
             <Button
               type="submit"
               variant="contained"
               color="primary"
-              disabled={usersFieldsValidate || loading || payload}
-              startIcon={loading ? <SpinnerButton /> : <Save />}
+              disabled={isSubmitting}
+              startIcon={isSubmitting ? <SpinnerButton /> : <Save />}
             >
-              {loading ? "LOADING..." : "CREATE USER"}
+              {isSubmitting ? "LOADING..." : "CREATE USER"}
             </Button>
           </div>
+              </Grid>
         </Grid>
       </form>
     </>

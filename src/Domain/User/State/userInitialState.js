@@ -1,7 +1,7 @@
 const userInitialState = {
     users: {
         loading: false,
-        data: null,
+        data: [],
         error: null,
         token: null
     },

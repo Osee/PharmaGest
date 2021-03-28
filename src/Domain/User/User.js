@@ -1,16 +1,18 @@
 import React, { useEffect, useContext, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { Grid, makeStyles, Paper } from "@material-ui/core"
+import { Grid, LinearProgress, makeStyles, Paper } from "@material-ui/core"
 import useToggle from '../../Hooks/useToggle';
 import { GlobalContext } from '../../Context/Provider';
 import GetToken from './Actions/GetToken';
 import UserCreateLayout from './Layout/UserCreateLayout';
-import useUserForm from './Hooks/useUserForm';
+import UserListLayout from './Layout/UserListLayout';
+import  useUserForm  from './Hooks/useUserForm';
 import { SnackWithAction } from "../../Components/feedback"
 import ClearAddedData from './Actions/ClearAddedData';
+import GetUsers from './Actions/GetUsers';
 
 
-const UserCreateTheme = makeStyles((theme) => ({
+const UserCreateTheme = makeStyles(theme => ({
     container: {
         margin: theme.spacing(5, 0),
     },
@@ -18,10 +20,39 @@ const UserCreateTheme = makeStyles((theme) => ({
         padding: theme.spacing(3),
     },
 }));
+const UserListTheme = makeStyles(theme => ({
+  container: {
+    margin: theme.spacing(3, 0),
+  },
+  content: {
+    padding: theme.spacing(2),
+  },
+
+}))
 
 
 export function UserList() {
-    return <div>C'est la liste des utlisateurs</div>
+    const userListClasses = UserListTheme()
+    const {
+        userState: {
+            users,
+        },
+        dispatchUser
+    } = useContext(GlobalContext)
+
+    useEffect(() => {
+        GetUsers(users)(dispatchUser)
+    }, [dispatchUser])
+    return <>
+        <Typography variant="h3" color="inherit" >
+            Users List
+        </Typography>
+        {users.loading &&  <Paper className={userListClasses.content}>
+           <LinearProgress className={userListClasses.container}/> 
+        </Paper>}
+        {users.data && <UserListLayout data={ {users, dispatchUser} }/>}
+
+    </>
 }
 
 export function UserCreate() {
@@ -42,17 +73,13 @@ export function UserCreate() {
     useEffect(() => {
         GetToken(token)(dispatchUser)
     }, [dispatchUser, token])
-
     useEffect(() => {
         if (data) {
-            toggleSnack()
-        }
-        return () => {
             toggleSnack()
             ClearAddedData()(dispatchUser)
         }
     }, [data, dispatchUser, toggleSnack])
-
+    
 
     return <>
         <Typography variant="h3" color="inherit" >
