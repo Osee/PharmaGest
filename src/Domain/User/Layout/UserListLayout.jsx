@@ -1,6 +1,10 @@
 import { Grid, makeStyles, Paper } from "@material-ui/core";
 import React, {useState} from "react";
+import Popup from "../../../Components/Popup/Popup";
 import Dataviews from "../../../Components/Table/Dataviews";
+import useToggle from "../../../Hooks/useToggle";
+import useUserForm from "../Hooks/useUserForm";
+import UserCreateLayout from "./UserCreateLayout";
 
 const UserListTheme = makeStyles(theme => ({
   container : {
@@ -31,6 +35,8 @@ function UserListLayout(
   }
 ) {
   const [filter, setFilter] = useState("")
+  const [popupAddUser, toggleAddUser] = useToggle()
+  
   const userListClasses = UserListTheme()
 
   const handleFilterChange = e => setFilter(e.target.value)
@@ -42,10 +48,17 @@ function UserListLayout(
           records={usersData}
           filter={filter}
           onChangeFilter={handleFilterChange}
-          setPopupOpen={false}
+          setPopupOpen={toggleAddUser}
           deleteItem={() => { }}
           editItem={() => {}}
         />
+        <Popup
+          title="CREATE AN USER"
+          popupOpen={popupAddUser}
+          togglePopup={toggleAddUser}
+        >
+          <UserCreateLayout form={ useUserForm()}/>
+        </Popup>
     </Grid>
   </Grid>
   </>

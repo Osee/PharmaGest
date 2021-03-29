@@ -137,7 +137,7 @@ const Dataviews = ({
           color="primary"
           className={classes.button}
           startIcon={<Add />}
-          onClick={() => setPopupOpen(true)}
+          onClick={setPopupOpen}
         >
           ADD USER
         </Button>

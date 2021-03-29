@@ -43,6 +43,7 @@ export function UserList() {
     useEffect(() => {
         GetUsers(users)(dispatchUser)
     }, [dispatchUser])
+    
     return <>
         <Typography variant="h3" color="inherit" >
             Users List
