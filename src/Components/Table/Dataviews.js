@@ -50,6 +50,7 @@ const Dataviews = ({
   setPopupOpen,
   deleteItem,
   editItem,
+  buttonTitle = "ADD SOMETHING"
 }) => {
   const classes = useStyle();
   const pages = [5, 10, 25];
@@ -139,7 +140,7 @@ const Dataviews = ({
           startIcon={<Add />}
           onClick={setPopupOpen}
         >
-          ADD USER
+          {buttonTitle}
         </Button>
       </Toolbar>
       <TableContainer>
@@ -184,7 +185,7 @@ const Dataviews = ({
                     color="default"
                     size="small"
                     startIcon={<EditTwoTone />}
-                    onClick={() => editItem(record.id)}
+                    onClick={() => editItem(record)}
                   >
                     EDIT
                   </Button>

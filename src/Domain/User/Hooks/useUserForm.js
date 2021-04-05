@@ -14,7 +14,7 @@ const schema = yup.object().shape({
         .integer()
         .required("is required"),
     password: yup.string()
-        .matches(/[A-Z0-9]+/)
+        .matches(/^[a-zA-Z0-9]+$/)
         .min(6, "must be at least 6 characters")
         .max(25,  "must be at least 25 characters or less")
         .required("is required"),
@@ -24,7 +24,6 @@ const schema = yup.object().shape({
 })
 
 function useUserForm(init = {}) {
-
     const {
         register,
         handleSubmit,
@@ -38,8 +37,8 @@ function useUserForm(init = {}) {
         reset
     } = useForm({
         mode: "onTouched",
-        defaultValues: init,
-        resolver : yupResolver(schema)
+        resolver: yupResolver(schema),
+        defaultValues : init
     })
 
     const {

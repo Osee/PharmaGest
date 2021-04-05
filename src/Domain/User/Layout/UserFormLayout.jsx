@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import { Grid, TextField, MenuItem, makeStyles } from "@material-ui/core";
-import { Save } from "@material-ui/icons";
+import { SaveTwoTone, CachedTwoTone } from "@material-ui/icons";
 import { SpinnerButton } from "../../../Components/feedback";
 
 const Options = [
@@ -15,7 +15,7 @@ const Options = [
   },
 ];
 
-const UserCreateTheme = makeStyles((theme) => ({
+const UserFormLayoutThemes = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
       margin: theme.spacing(1, 0),
@@ -31,7 +31,7 @@ const UserCreateTheme = makeStyles((theme) => ({
   },
 }));
 
-function UserCreateLayout({
+function UserFormLayout({
   form: {
     register,
     handleSubmit,
@@ -41,9 +41,11 @@ function UserCreateLayout({
     control,
     Controller
   },
+  editMode = false
 }) {
-  const classes = UserCreateTheme();
- 
+  const classes = UserFormLayoutThemes();
+  const titleButton = editMode ? "UPDATE USER" : "CREATE AN USER"
+  const icon = !editMode ? <SaveTwoTone/> : <CachedTwoTone/>
   return (
     <>
       <form
@@ -149,22 +151,30 @@ function UserCreateLayout({
         </Grid>
         <Grid container>
           <Grid item md>
-          <div className={classes.containerBottom}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              startIcon={isSubmitting ? <SpinnerButton /> : <Save />}
-            >
-              {isSubmitting ? "LOADING..." : "CREATE USER"}
-            </Button>
-          </div>
-              </Grid>
+            <div className={classes.containerBottom}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting}
+                startIcon={isSubmitting ? <SpinnerButton /> : icon}
+              >
+                {isSubmitting ? "LOADING..." : titleButton}
+              </Button>
+            </div>
+          </Grid>
         </Grid>
       </form>
     </>
   );
 }
 
-export default UserCreateLayout;
+
+
+export function UserCreateLayout({ form }) {
+  return <UserFormLayout form={form}/>
+}
+
+export function UserEditLayout({ form, editMode }) {
+  return <UserFormLayout form={form} editMode={editMode} />
+}

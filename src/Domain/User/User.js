@@ -4,12 +4,13 @@ import { Grid, LinearProgress, makeStyles, Paper } from "@material-ui/core"
 import useToggle from '../../Hooks/useToggle';
 import { GlobalContext } from '../../Context/Provider';
 import GetToken from './Actions/GetToken';
-import UserCreateLayout from './Layout/UserCreateLayout';
+import { UserCreateLayout } from './Layout/UserFormLayout';
 import UserListLayout from './Layout/UserListLayout';
 import  useUserForm  from './Hooks/useUserForm';
 import { SnackWithAction } from "../../Components/feedback"
 import ClearAddedData from './Actions/ClearAddedData';
 import GetUsers from './Actions/GetUsers';
+import DeleteUser from './Actions/DeleteUser';
 
 
 const UserCreateTheme = makeStyles(theme => ({
@@ -33,6 +34,8 @@ const UserListTheme = makeStyles(theme => ({
 
 export function UserList() {
     const userListClasses = UserListTheme()
+    const handleDeleteUser = async id => await DeleteUser(id, users.token)(dispatchUser)
+    const handleEditUser = id => console.log(id)
     const {
         userState: {
             users,
@@ -51,7 +54,14 @@ export function UserList() {
         {users.loading &&  <Paper className={userListClasses.content}>
            <LinearProgress className={userListClasses.container}/> 
         </Paper>}
-        {users.data && <UserListLayout data={ {users, dispatchUser} }/>}
+        {users.data && <UserListLayout data={
+            {
+                users,
+                dispatchUser,
+                handleDeleteUser,
+                handleEditUser
+            }
+        } />}
 
     </>
 }

@@ -4,7 +4,7 @@ import Popup from "../../../Components/Popup/Popup";
 import Dataviews from "../../../Components/Table/Dataviews";
 import useToggle from "../../../Hooks/useToggle";
 import useUserForm from "../Hooks/useUserForm";
-import UserCreateLayout from "./UserCreateLayout";
+import { UserCreateLayout, UserEditLayout } from "./UserFormLayout";
 
 const UserListTheme = makeStyles(theme => ({
   container : {
@@ -30,12 +30,19 @@ function UserListLayout(
         data: usersData,
         token
       },
-      dispatchUser
+      dispatchUser,
+      handleDeleteUser,
+      handleEditUser,
     }
   }
 ) {
   const [filter, setFilter] = useState("")
   const [popupAddUser, toggleAddUser] = useToggle()
+  const [editMode, toggleEditMode] = useToggle()
+  const EditUser = e => {
+    toggleEditMode()
+    handleEditUser(e)
+  }
   
   const userListClasses = UserListTheme()
 
@@ -48,16 +55,25 @@ function UserListLayout(
           records={usersData}
           filter={filter}
           onChangeFilter={handleFilterChange}
-          setPopupOpen={toggleAddUser}
-          deleteItem={() => { }}
-          editItem={() => {}}
+          setPopupOpen={toggleAddUser || editMode}
+          deleteItem={handleDeleteUser}
+          editItem={EditUser}
+          buttonTitle="ADD USER"
         />
         <Popup
           title="CREATE AN USER"
-          popupOpen={popupAddUser}
+          popupOpen={ popupAddUser}
           togglePopup={toggleAddUser}
         >
-          <UserCreateLayout form={ useUserForm()}/>
+          <UserCreateLayout form={useUserForm()}/>
+        </Popup>
+        
+        <Popup
+          title="EDIT USER"
+          popupOpen={editMode}
+          togglePopup={toggleEditMode}
+        >
+          <UserEditLayout form={useUserForm({})} editMode={editMode}/>
         </Popup>
     </Grid>
   </Grid>
